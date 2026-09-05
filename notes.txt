@@ -1,0 +1,53 @@
+TODO:
+    All settings in one place
+	Id
+	radio
+	SLP
+	main deploy alt
+	wifi ap?
+	stage?
+	sep/ignition delay
+	charge timing offset
+
+Transmit request 0x10
+    endpoints defined by SE, EP, CI
+    NP - max payload bytes
+    0x0...0FFFF - broadcast address
+
+STRUCT FORMAT STRINGS
+    > big-endian, no padding
+    Xc charX
+    B uchar
+    H ushort
+    i int
+    f float (4bytes)
+    s string (bytes)
+
+
+
+1st stage burnout, <0 G for 0.x seconds
+part failures on status page
+
+
+Default GPS Sentences:
+    RMC
+    VTG
+    GGA
+    GSA
+    GSV
+    GLL
+
+
+Radio handoff
+    both host a page /handoff
+    handle fail
+    watchdog timer
+
+
+SAFETY:
+    Acceleration AND altitude before registering "boost" state
+    reset maxalt at burnout (pressure spikes near mach)
+
+    handle ignition failure?
+    pointed up before sus ignition
+    handle drouge failure, pop main early
