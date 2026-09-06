@@ -124,7 +124,9 @@ try:
             accelup = -stella.hig.acceleration[1]
             bno_tilt = angleBtwn(stella.bno.gravity, (0, -9.8, 0))
             agl = stella.bmp.altitude - ground  # Above Ground Level
-            
+
+            # update the hig ahrs filter
+            update_hig()
 
             t = time.monotonic()
             vvel = (agl - prev_agl) / (t - prev_agl_time) # m/s

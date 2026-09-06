@@ -23,6 +23,9 @@ from adafruit_bno08x.i2c import BNO08X_I2C # type:ignore
 from adafruit_lsm6ds import Rate, AccelRange, GyroRange
 from adafruit_lsm6ds.lsm6dso32 import LSM6DSO32 # type:ignore
 
+# mahony filter for hig ahrs
+import gamblor21_ahrs.mahoney
+
 ######### DIGITAL PINS ########################################################
 print(f"{"Digital Pins":.<20}", end="")
 led = digitalio.DigitalInOut(board.LED)
@@ -233,14 +236,35 @@ try:
         hig.gyro_range = GyroRange.RANGE_2000_DPS
         hig.accelerometer_data_rate = Rate.RATE_1_66K_HZ
         hig.gyro_data_rate = Rate.RATE_1_66K_HZ
+        # set up the ahrs mahony filter for orientation data
+        hig_ahrs_filter_samplerate = 1
+        hig_ahrs_filter = mahony.Mahony(50, 5, hig_ahrs_filter_samplerate)
         print("OK")
     except Exception as e:
         print("No LSM found. " + str(e))
     
     def test_hig():
         while True:
+            print(hig.gyro)
             print(hig.acceleration)
-            time.sleep(1)
+            update_hig()
+            print(hig_pitch)
+            print(hig_roll)
+            print(hig_yaw)
+            time.sleep(0.5)
+        
+    def update_hig():
+        hig_ahrs_filter.update(hig.gyro[0], hig.gyro[1], hig.gyro[2], hig.acceleration[0], hig.acceleration[1], hig.acceleration[2], 0, 0, 0)
+
+    def hig_pitch():
+        return hig_ahrs_filter.pitch
+
+    def hig_roll():
+        return hig_ahrs_filter.hig_roll
+
+    def hig_yaw():
+        return hig_ahrs_filter.yaw
+
 
 
 except RuntimeError:
